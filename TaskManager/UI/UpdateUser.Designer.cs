@@ -42,11 +42,11 @@ namespace TaskManager.UI
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label1
+            // lblInstructions
             // 
             this.lblInstructions.AutoSize = true;
             this.lblInstructions.Location = new System.Drawing.Point(1, 9);
-            this.lblInstructions.Name = "label1";
+            this.lblInstructions.Name = "lblInstructions";
             this.lblInstructions.Size = new System.Drawing.Size(148, 13);
             this.lblInstructions.TabIndex = 0;
             this.lblInstructions.Text = "Update User Settings for User";
@@ -102,32 +102,32 @@ namespace TaskManager.UI
             this.tableLayoutPanel1.Size = new System.Drawing.Size(268, 68);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
-            // label2
+            // lblEmailLbl
             // 
             this.lblEmailLbl.AutoSize = true;
             this.lblEmailLbl.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblEmailLbl.Location = new System.Drawing.Point(63, 0);
-            this.lblEmailLbl.Name = "label2";
+            this.lblEmailLbl.Name = "lblEmailLbl";
             this.lblEmailLbl.Size = new System.Drawing.Size(32, 20);
             this.lblEmailLbl.TabIndex = 0;
             this.lblEmailLbl.Text = "Email";
             // 
-            // label3
+            // lblPasswordLbl
             // 
             this.lblPasswordLbl.AutoSize = true;
             this.lblPasswordLbl.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblPasswordLbl.Location = new System.Drawing.Point(17, 20);
-            this.lblPasswordLbl.Name = "label3";
+            this.lblPasswordLbl.Name = "lblPasswordLbl";
             this.lblPasswordLbl.Size = new System.Drawing.Size(78, 20);
             this.lblPasswordLbl.TabIndex = 1;
             this.lblPasswordLbl.Text = "New Password";
             // 
-            // label4
+            // lblPasswordConfirmLbl
             // 
             this.lblPasswordConfirmLbl.AutoSize = true;
             this.lblPasswordConfirmLbl.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblPasswordConfirmLbl.Location = new System.Drawing.Point(4, 40);
-            this.lblPasswordConfirmLbl.Name = "label4";
+            this.lblPasswordConfirmLbl.Name = "lblPasswordConfirmLbl";
             this.lblPasswordConfirmLbl.Size = new System.Drawing.Size(91, 30);
             this.lblPasswordConfirmLbl.TabIndex = 2;
             this.lblPasswordConfirmLbl.Text = "Confirm Password";
@@ -175,7 +175,7 @@ namespace TaskManager.UI
             this.MinimizeBox = false;
             this.Name = "UpdateUserDialog";
             this.ShowInTaskbar = false;
-            this.Text = "UpdateUser";
+            this.Text = "Update User";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

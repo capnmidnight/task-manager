@@ -5,22 +5,19 @@ using System.Data;
 using System.Windows.Forms;
 
 using TaskManager.DataAccess;
-using TaskManager.DataAccess.SqlServer;
-using TaskManager.Localization;
+//using TaskManager.DataAccess.MSSQL.SqlServer;
 using TaskManager.Properties;
 
 namespace TaskManager.UI
 {
     public partial class LoginDialog : Form
     {
-        InfoAdapter data;
+        IDataAccess data;
         int userID;
-        public InfoAdapter DataConnection
+        public IDataAccess DataConnection
         {
-            get
-            {
-                return data;
-            }
+            get { return data; }
+            set { this.data = value; }
         }
 
         public LoginDialog()
@@ -31,37 +28,30 @@ namespace TaskManager.UI
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
-            ILanguage lang = Information.Languages[Settings.Default.CurrentLanguage];
-            this.btnOK.Text = lang.OK;
-            this.btnCancel.Text = lang.Cancel;
-            this.lblUserName.Text = lang.Login_UserNameLabel;
-            this.lblPassword.Text = lang.Login_PasswordLabel;
-            this.Text = lang.Login_Title;
-            this.checkSaveUserName.Text = lang.Login_SaveUserLabel;
-            this.grpDataSource.Text = lang.Login_DataSource;
-            this.rbLocal.Text = lang.Login_Local;
-            this.rbServer.Text = lang.Login_Server;
 
             this.checkSaveUserName.Checked = Settings.Default.SaveUserName;
             if (this.checkSaveUserName.Checked)
                 this.txtUserName.Text = Settings.Default.UserName;
+            if (Settings.Default.SavePassword)
+                this.txtPassword.Text = Settings.Default.Password;
         }
 
         public int UserID { get { return this.userID; } }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
+            Application.DoEvents();
             Settings.Default.SaveUserName = this.checkSaveUserName.Checked;
-            if (this.checkSaveUserName.Checked)
-                Settings.Default.UserName = this.txtUserName.Text;
             Settings.Default.Save();
-            
-            if (rbLocal.Checked)
-                this.data = new SqlServerAdapter(Settings.Default.DatabaseLocalConnectionString);
-            else if (rbServer.Checked)
-                this.data = new SqlServerAdapter(Settings.Default.DBConnectionString);
+            if (Settings.Default.UseRemoteConnection)
+                this.data = new TaskManager.DataAccess.MSSQL.SqlServerAccess(Settings.Default.DBConnectionString);
+            else
+                this.data = new TaskManager.DataAccess.MSSQL.SqlServerCeAccess("tasks.sdf");
 
-            this.userID = data.User.Check(txtUserName.Text, txtPassword.Text);
+            this.userID = data.CheckUser(txtUserName.Text, txtPassword.Text);
+            this.Cursor = Cursors.Default;
+            Application.DoEvents();
             if (userID > 0)
             {
                 this.DialogResult = DialogResult.OK;
@@ -69,10 +59,9 @@ namespace TaskManager.UI
             }
             else
             {
-                ILanguage lang = Information.Languages[Settings.Default.CurrentLanguage];
                 MessageBox.Show(
-                    lang.Login_Failed,
-                    lang.Login_FailedTitle,
+                    "Login Failed: unrecognized username or password.",
+                    "Access Denied",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Stop);
             }

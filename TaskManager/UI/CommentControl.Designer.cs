@@ -36,6 +36,8 @@ namespace TaskManager.UI
             this.lblDate = new System.Windows.Forms.Label();
             this.lblDateLbl = new System.Windows.Forms.Label();
             this.txtComment = new System.Windows.Forms.TextBox();
+            this.linkToggleVisible = new System.Windows.Forms.LinkLabel();
+            this.linkDelete = new System.Windows.Forms.LinkLabel();
             this.tableComment.SuspendLayout();
             this.flowUserName.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -49,13 +51,16 @@ namespace TaskManager.UI
             this.tableComment.Controls.Add(this.flowUserName, 0, 0);
             this.tableComment.Controls.Add(this.panel1, 1, 0);
             this.tableComment.Controls.Add(this.txtComment, 0, 1);
+            this.tableComment.Controls.Add(this.linkToggleVisible, 0, 2);
+            this.tableComment.Controls.Add(this.linkDelete, 1, 2);
             this.tableComment.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableComment.Location = new System.Drawing.Point(0, 0);
             this.tableComment.Name = "tableComment";
-            this.tableComment.RowCount = 2;
+            this.tableComment.RowCount = 3;
             this.tableComment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 21F));
             this.tableComment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableComment.Size = new System.Drawing.Size(283, 130);
+            this.tableComment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableComment.Size = new System.Drawing.Size(283, 150);
             this.tableComment.TabIndex = 0;
             // 
             // flowUserName
@@ -126,6 +131,28 @@ namespace TaskManager.UI
             this.txtComment.Size = new System.Drawing.Size(277, 103);
             this.txtComment.TabIndex = 5;
             // 
+            // linkToggleVisible
+            // 
+            this.linkToggleVisible.AutoSize = true;
+            this.linkToggleVisible.Location = new System.Drawing.Point(3, 130);
+            this.linkToggleVisible.Name = "linkToggleVisible";
+            this.linkToggleVisible.Size = new System.Drawing.Size(29, 13);
+            this.linkToggleVisible.TabIndex = 6;
+            this.linkToggleVisible.TabStop = true;
+            this.linkToggleVisible.Text = "Hide";
+            this.linkToggleVisible.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkToggleVisible_LinkClicked);
+            // 
+            // linkDelete
+            // 
+            this.linkDelete.AutoSize = true;
+            this.linkDelete.Location = new System.Drawing.Point(144, 130);
+            this.linkDelete.Name = "linkDelete";
+            this.linkDelete.Size = new System.Drawing.Size(38, 13);
+            this.linkDelete.TabIndex = 7;
+            this.linkDelete.TabStop = true;
+            this.linkDelete.Text = "Delete";
+            this.linkDelete.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkDelete_LinkClicked);
+            // 
             // CommentControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -134,7 +161,7 @@ namespace TaskManager.UI
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.tableComment);
             this.Name = "CommentControl";
-            this.Size = new System.Drawing.Size(283, 130);
+            this.Size = new System.Drawing.Size(283, 150);
             this.tableComment.ResumeLayout(false);
             this.tableComment.PerformLayout();
             this.flowUserName.ResumeLayout(false);
@@ -155,5 +182,7 @@ namespace TaskManager.UI
         private System.Windows.Forms.Label lblDateLbl;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox txtComment;
+        private System.Windows.Forms.LinkLabel linkToggleVisible;
+        private System.Windows.Forms.LinkLabel linkDelete;
     }
 }

@@ -7,7 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 
 using TaskManager.DataAccess;
-using TaskManager.Localization;
 using TaskManager.Properties;
 
 namespace TaskManager.UI
@@ -18,14 +17,14 @@ namespace TaskManager.UI
     /// </summary>
     public partial class CreateTaskDialog : Form
     {
-        InfoAdapter data;
-        IUser curUser;
+        IDataAccess data;
+        User curUser;
 
         /// <summary>
         /// The data adapter to use for creating tasks. Data adapters can read and write data
         /// to any type of data source.
         /// </summary>
-        public InfoAdapter DataConnection
+        public IDataAccess DataConnection
         {
             set
             {
@@ -33,7 +32,7 @@ namespace TaskManager.UI
             }
         }
 
-        public IUser CurrentUser
+        public User CurrentUser
         {
             set
             {
@@ -48,7 +47,7 @@ namespace TaskManager.UI
 
         private void txtTitle_Enter(object sender, EventArgs e)
         {
-            if (txtTitle.Text == Information.Languages[Settings.Default.CurrentLanguage].AddTask_DefaultTitle)
+            if (txtTitle.Text == "(title)")
                 txtTitle.Text = "";
         }
 
@@ -56,7 +55,7 @@ namespace TaskManager.UI
         {
             if (comboUserAssigned.SelectedItem == null)
             {
-                MessageBox.Show(Information.Languages[Settings.Default.CurrentLanguage].AddTask_MissingUserValue, "", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("An assigned user must be selected.", "Missing Value", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
             else
             {
@@ -65,9 +64,11 @@ namespace TaskManager.UI
 
                     DateTime a = datePickDueDate.Value;
                     a = new DateTime(a.Year, a.Month, a.Day, 23, 59, 59);
-                    int taskID = data.Task.Create(txtTitle.Text, txtDescription.Text, curUser.UserID, ((IUser)comboUserAssigned.SelectedItem).UserID, (int)numPriority.Value, 0, a);
-                    foreach (ITag tag in lstTags.CheckedItems)
-                        data.Task.AddTag(tag.TagID, taskID);
+                    List<int> tagIDs = new List<int>();
+                    foreach (Tag tag in lstTags.CheckedItems)
+                        tagIDs.Add(tag.TagID);
+
+                    data.CreateTask(txtTitle.Text, txtDescription.Text, curUser.UserID, ((User)comboUserAssigned.SelectedItem).UserID, (int)numPriority.Value, 0, a, tagIDs);
                 }
                 this.DialogResult = DialogResult.OK;
                 this.Close();
@@ -87,15 +88,6 @@ namespace TaskManager.UI
 
         private void CreateTaskDialog_Shown(object sender, EventArgs e)
         {
-            ILanguage lang = Information.Languages[Settings.Default.CurrentLanguage];
-            this.btnCancel.Text = lang.Cancel;
-            this.btnOK.Text = lang.OK;
-            this.lblUserAssignedLbl.Text = lang.AddTask_UserAssignedLabel;
-            this.lblPriorityLbl.Text = lang.AddTask_PriorityLabel;
-            this.lblDueDateLbl.Text = lang.AddTask_DueDateLabel;
-            this.Text = lang.AddTask_Title;
-            this.txtTitle.Text = lang.AddTask_DefaultTitle;
-            this.txtDescription.Text = lang.AddTask_DefaultDescription;
             this.numPriority.Value = 1;
             this.datePickDueDate.Value = DateTime.Now.AddDays(14);
             if (this.data != null)
@@ -104,13 +96,13 @@ namespace TaskManager.UI
                 this.lstTags.Items.Clear();
                 if (this.data != null)
                 {
-                    this.comboUserAssigned.Items.AddRange(this.data.User.GetAll().ToArray());
-                    this.lstTags.Items.AddRange(this.data.Tag.GetAll().ToArray());
+                    this.comboUserAssigned.Items.AddRange(this.data.GetAllUsers().ToArray());
+                    this.lstTags.Items.AddRange(this.data.GetAllTags().ToArray());
                 }
             }
             this.comboUserAssigned.SelectedIndex = 0;
             for (int index = 0; index < this.lstTags.Items.Count; ++index)
-                this.lstTags.SetItemChecked(index, ((ITag)this.lstTags.Items[index]).IsDefault);
+                this.lstTags.SetItemChecked(index, ((Tag)this.lstTags.Items[index]).IsDefault);
         }
     }
 }

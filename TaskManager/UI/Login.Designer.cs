@@ -35,10 +35,6 @@ namespace TaskManager.UI
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.checkSaveUserName = new System.Windows.Forms.CheckBox();
-            this.rbLocal = new System.Windows.Forms.RadioButton();
-            this.rbServer = new System.Windows.Forms.RadioButton();
-            this.grpDataSource = new System.Windows.Forms.GroupBox();
-            this.grpDataSource.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblUserName
@@ -77,7 +73,7 @@ namespace TaskManager.UI
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnOK.Location = new System.Drawing.Point(3, 151);
+            this.btnOK.Location = new System.Drawing.Point(3, 80);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 4;
@@ -88,7 +84,7 @@ namespace TaskManager.UI
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(95, 151);
+            this.btnCancel.Location = new System.Drawing.Point(95, 80);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
@@ -106,47 +102,13 @@ namespace TaskManager.UI
             this.checkSaveUserName.Text = "Save User Name";
             this.checkSaveUserName.UseVisualStyleBackColor = true;
             // 
-            // rbLocal
-            // 
-            this.rbLocal.AutoSize = true;
-            this.rbLocal.Checked = true;
-            this.rbLocal.Location = new System.Drawing.Point(9, 19);
-            this.rbLocal.Name = "rbLocal";
-            this.rbLocal.Size = new System.Drawing.Size(51, 17);
-            this.rbLocal.TabIndex = 7;
-            this.rbLocal.TabStop = true;
-            this.rbLocal.Text = "Local";
-            this.rbLocal.UseVisualStyleBackColor = true;
-            // 
-            // rbServer
-            // 
-            this.rbServer.AutoSize = true;
-            this.rbServer.Location = new System.Drawing.Point(9, 42);
-            this.rbServer.Name = "rbServer";
-            this.rbServer.Size = new System.Drawing.Size(56, 17);
-            this.rbServer.TabIndex = 8;
-            this.rbServer.Text = "Server";
-            this.rbServer.UseVisualStyleBackColor = true;
-            // 
-            // grpDataSource
-            // 
-            this.grpDataSource.Controls.Add(this.rbServer);
-            this.grpDataSource.Controls.Add(this.rbLocal);
-            this.grpDataSource.Location = new System.Drawing.Point(3, 80);
-            this.grpDataSource.Name = "grpDataSource";
-            this.grpDataSource.Size = new System.Drawing.Size(167, 65);
-            this.grpDataSource.TabIndex = 9;
-            this.grpDataSource.TabStop = false;
-            this.grpDataSource.Text = "Data Source";
-            // 
             // LoginDialog
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(175, 181);
-            this.Controls.Add(this.grpDataSource);
+            this.ClientSize = new System.Drawing.Size(175, 109);
             this.Controls.Add(this.checkSaveUserName);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -160,8 +122,6 @@ namespace TaskManager.UI
             this.Name = "LoginDialog";
             this.ShowInTaskbar = false;
             this.Text = "Login";
-            this.grpDataSource.ResumeLayout(false);
-            this.grpDataSource.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -176,8 +136,5 @@ namespace TaskManager.UI
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.CheckBox checkSaveUserName;
-        private System.Windows.Forms.RadioButton rbLocal;
-        private System.Windows.Forms.RadioButton rbServer;
-        private System.Windows.Forms.GroupBox grpDataSource;
     }
 }

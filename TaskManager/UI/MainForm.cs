@@ -8,8 +8,6 @@ using System.Windows.Forms;
 
 using TaskManager.BusinessLogic;
 using TaskManager.DataAccess;
-using TaskManager.DataAccess.SqlServer;
-using TaskManager.Localization;
 using TaskManager.Properties;
 
 namespace TaskManager.UI
@@ -23,16 +21,17 @@ namespace TaskManager.UI
             COLOR_DUE = Color.SpringGreen;
             COLOR_LATE = Color.Salmon;
         }
-        private InfoAdapter data;
+        private IDataAccess data;
         private TagManagerDialog tagManager;
         private CreateTaskDialog createTask;
         private UpdateUserDialog updateUser;
+        private OptionsDialog options;
         private LoginDialog login;
 
         private bool saveSemaphor;
-        private ITask currentTask;
-        private IUser currentUser;
-
+        private Task currentTask;
+        private User currentUser;
+        private EventHandler deleteComment;
         public MainForm()
         {
             this.InitializeComponent();
@@ -40,67 +39,21 @@ namespace TaskManager.UI
             this.tagManager = new TagManagerDialog();
             this.createTask = new CreateTaskDialog();
             this.updateUser = new UpdateUserDialog();
+            this.options = new OptionsDialog();
             this.currentTask = null;
             this.saveSemaphor = false;
             this.SetIsLoggedIn(false);
-            foreach (string lang in Information.Languages.SupportedLanguages)
-            {
-                ToolStripMenuItem item = new ToolStripMenuItem(lang);
-                item.Checked = (lang == Settings.Default.CurrentLanguage);
-                languageToolStripMenuItem.DropDownItems.Add(item);
-                item.Click += new EventHandler(language_Click);
-            }
+            this.deleteComment = new EventHandler(cc_Delete);
+            BuildTaskTrayMenu();
         }
-
-        void SetLanguageParams()
+        private void BuildTaskTrayMenu()
         {
-            ILanguage lang = Information.Languages[Settings.Default.CurrentLanguage];
-            this.lblSearchTagsLbl.Text = lang.Main_SearchTagsLabel;
-            this.lblFilterUserLbl.Text = lang.Main_FilterUserLabel;
-            this.lblCreatorLbl.Text = lang.Main_CreatorLabel;
-            this.lblCreator.Text = lang.Main_Creator;
-            this.lblUserAssignedLbl.Text = lang.Main_UserAssignedLabel;
-            this.lblDueDateLbl.Text = lang.Main_DueDateLabel;
-            this.lblPriorityLabel.Text = lang.Main_PriorityLabel;
-            this.lblProgressLabel.Text = lang.Main_ProgressLabel;
-            this.btnClearComment.Text = lang.Main_ClearCommentButton;
-            this.btnAddComment.Text = lang.Main_AddCommentButton;
-            this.lblAddCommentLbl.Text = lang.Main_AddCommentLabel;
-            this.fileToolStripMenuItem.Text = lang.Main_MenuFile;
-            this.loginToolStripMenuItem.Text = lang.Main_MenuLogin;
-            this.logoutToolStripMenuItem.Text = lang.Main_MenuLogout;
-            this.editUserDetailsToolStripMenuItem.Text = lang.Main_MenuEditUserDetails;
-            this.importToolStripMenuItem.Text = lang.Main_MenuImport;
-            this.exportToolStripMenuItem.Text = lang.Main_MenuExport;
-            this.exitToolStripMenuItem.Text = lang.Main_MenuExit;
-            this.editToolStripMenuItem.Text = lang.Main_MenuEdit;
-            this.addTaskToolStripMenuItem.Text = lang.Main_MenuAddTask;
-            this.manageTagsToolStripMenuItem.Text = lang.Main_MenuManageTags;
-            this.languageToolStripMenuItem.Text = lang.Main_MenuLanguage;
-            this.helpToolStripMenuItem.Text = lang.Main_MenuHelp;
-            this.attachFileToolStripMenuItem.Text = lang.Main_MenuAttachFile;
-            this.TaskID.HeaderText = lang.Main_TaskIDHeader;
-            this.Priority.HeaderText = lang.Main_PriorityHeader;
-            this.Title.HeaderText = lang.Main_TitleHeader;
-            this.DueDate.HeaderText = lang.Main_Due;
-            this.DateCreated.HeaderText = lang.Main_DateCreatedHeader;
-            this.Text = lang.Main_Title;
+            notifyIcon1.ContextMenu = new ContextMenu();
+            MenuItem min = new MenuItem("Minize to Task Tray", new EventHandler(minimizeToTaskTrayToolStripMenuItem_Click));
+            minimizeToTaskTrayToolStripMenuItem.Checked = min.Checked = Settings.Default.MinimizeToTray;
+            notifyIcon1.ContextMenu.MenuItems.Add(min);
+            notifyIcon1.ContextMenu.MenuItems.Add(new MenuItem("Restore", new EventHandler(notifyIcon1_Click)));
         }
-
-        void language_Click(object sender, EventArgs e)
-        {
-            if (sender is ToolStripMenuItem)
-            {
-                ToolStripMenuItem item = sender as ToolStripMenuItem;
-                foreach (ToolStripMenuItem t in languageToolStripMenuItem.DropDownItems)
-                    t.Checked = false;
-                item.Checked = true;
-                Settings.Default.CurrentLanguage = item.Text;
-                Settings.Default.Save();
-                SetLanguageParams();
-            }
-        }
-
         private void LoadUsers()
         {
             this.LoadUsers(comboUserAssigned);
@@ -110,7 +63,7 @@ namespace TaskManager.UI
         private void LoadUsers(ComboBox comboBox)
         {
             comboBox.Items.Clear();
-            List<IUser> users = this.data.User.GetAll();
+            List<User> users = this.data.GetAllUsers();
             comboBox.Items.AddRange(users.ToArray());
         }
 
@@ -123,7 +76,7 @@ namespace TaskManager.UI
         private void LoadTags(CheckedListBox listBox, bool checkDefaults)
         {
             listBox.Items.Clear();
-            List<ITag> tags = this.data.Tag.GetAll();
+            List<Tag> tags = this.data.GetAllTags();
             if (tags != null)
                 listBox.Items.AddRange(tags.ToArray());
             if (checkDefaults)
@@ -146,12 +99,13 @@ namespace TaskManager.UI
                     userID = ((User)this.comboFilterAssignUser.SelectedItem).userID;
 
                 //perform the search
-                List<ITask> tasks = this.data.Task.Find(tagIDs, userID, DateTimePicker.MaximumDateTime);
-                lblSearchCount.Text = tasks.Count.ToString();
+                List<Task> tasks = this.data.FindTasks(tagIDs, userID, DateTimePicker.MaximumDateTime);
+                lblSearchCount.Text = string.Format("{0} Task{1} found", tasks.Count, tasks.Count == 1 ? "s" : "");
                 int index = -1; //will hold the row number of the currently selected task
                 DateTime today = DateTime.Now;
 
                 this.gvTasks.SuspendLayout();
+                int scroll = this.gvTasks.VerticalScrollingOffset;
                 this.gvTasks.Rows.Clear();
                 foreach (Task task in tasks)
                 {
@@ -180,20 +134,23 @@ namespace TaskManager.UI
                 if (index == -1)
                     this.ClearTask();
                 else
+                {
                     this.gvTasks.Rows[index].Selected = true;
-                this.ResumeLayout();
+                    this.gvTasks.FirstDisplayedScrollingRowIndex = index;
+                }
+                this.gvTasks.ResumeLayout();
             }
         }
 
         private void ClearTask()
         {
             this.currentTask = null;
-            this.attachFileToolStripMenuItem.Enabled = false;
             this.txtDescription.Text = "";
             for (int index = 0; index < this.lstTagsOnTask.Items.Count; ++index)
                 this.lstTagsOnTask.SetItemChecked(index, false);
             this.comboUserAssigned.SelectedIndex = -1;
             this.flowComments.Controls.Clear();
+            this.listFileAttachments.Items.Clear();
         }
 
         private void ShowTask(int taskID)
@@ -203,10 +160,9 @@ namespace TaskManager.UI
                 this.saveSemaphor = true;
                 if (taskID > 0)
                 {
-                    this.currentTask = this.data.Task.Get(taskID);
-                    this.attachFileToolStripMenuItem.Enabled = true;
+                    this.currentTask = this.data.GetTask(taskID);
                     this.txtDescription.Text = this.currentTask.Description;
-                    this.lblCreator.Text = this.data.User.Get(this.currentTask.UserCreator).UserName;
+                    this.lblCreator.Text = this.data.GetUser(this.currentTask.UserCreator).UserName;
                     this.numPriority.Value = this.currentTask.Priority;
                     this.trackProgress.Value = this.currentTask.Progress;
                     if (this.currentTask.DueDate >= DateTimePicker.MinimumDateTime && this.currentTask.DueDate <= DateTimePicker.MaximumDateTime)
@@ -231,7 +187,7 @@ namespace TaskManager.UI
 
         private void ShowAttachments()
         {
-            List<IAttachmentReference> attachments = this.data.Task.GetAttachments(this.currentTask.TaskID);
+            List<AttachmentReference> attachments = this.data.GetAttachmentsOnTask(this.currentTask.TaskID);
             listFileAttachments.SuspendLayout();
             listFileAttachments.Items.Clear();
             listFileAttachments.Items.AddRange(attachments.ToArray());
@@ -247,7 +203,7 @@ namespace TaskManager.UI
 
         private void ShowTagsForTask()
         {
-            List<ITag> tagsOnTask = this.data.Task.GetTags(currentTask.TaskID);
+            List<Tag> tagsOnTask = this.data.GetTagsOnTask(currentTask.TaskID);
             for (int index = 0; index < this.lstTagsOnTask.Items.Count; ++index)
             {
                 this.lstTagsOnTask.SetItemChecked(index, false);
@@ -262,16 +218,28 @@ namespace TaskManager.UI
             this.flowComments.Controls.Clear();
             if (this.data != null)
             {
-                List<IComment> comments = this.data.Task.GetComments(currentTask.TaskID);
-                foreach (IComment comment in comments)
+                List<Comment> comments = this.data.GetCommentsOnTask(currentTask.TaskID);
+                foreach (Comment comment in comments)
                 {
                     CommentControl cc = new CommentControl();
                     cc.Text = comment.Text;
-                    cc.UserName = data.User.Get(comment.UserID).UserName;
+                    cc.UserName = data.GetUser(comment.UserID).UserName;
                     cc.CommentDate = comment.DateCreated;
+                    cc.CommentID = comment.CommentID;
                     cc.Width = flowComments.Width - 25;
+                    cc.Delete += deleteComment;
                     this.flowComments.Controls.Add(cc);
                 }
+            }
+        }
+
+        void cc_Delete(object sender, EventArgs e)
+        {
+            if (sender is CommentControl)
+            {
+                CommentControl cc = sender as CommentControl;
+                this.data.DeleteComment(cc.CommentID);
+                this.ShowComments();
             }
         }
 
@@ -299,7 +267,7 @@ namespace TaskManager.UI
                 dueDate = new DateTime(temp.Year, temp.Month, temp.Day, 23, 59, 59);
                 if (this.data != null)
                 {
-                    this.data.Task.Edit(
+                    this.data.EditTask(
                         this.currentTask.TaskID,
                         title,
                         description,
@@ -308,13 +276,23 @@ namespace TaskManager.UI
                         progress,
                         dueDate);
 
-                    this.currentTask = this.data.Task.Get(this.currentTask.TaskID);
+                    this.currentTask = this.data.GetTask(this.currentTask.TaskID);
 
+                    List<Tag> tags = this.data.GetTagsOnTask(this.currentTask.TaskID);
+                    List<int> tagIDs = new List<int>();
+                    foreach (Tag tag in tags) tagIDs.Add(tag.TagID);
                     for (int index = 0; index < this.lstTagsOnTask.Items.Count; ++index)
+                    {
+                        int tagID = ((Tag)this.lstTagsOnTask.Items[index]).tagID;
                         if (this.lstTagsOnTask.GetItemChecked(index))
-                            this.data.Task.AddTag(((Tag)this.lstTagsOnTask.Items[index]).tagID, this.currentTask.TaskID);
+                        {
+                            if (!tagIDs.Contains(tagID))
+                                this.data.AddTagToTask(tagID, this.currentTask.TaskID);
+                        }
                         else
-                            this.data.Task.RemoveTag(((Tag)this.lstTagsOnTask.Items[index]).tagID, this.currentTask.TaskID);
+                            if (tagIDs.Contains(tagID))
+                                this.data.RemoveTagFromTask(((Tag)this.lstTagsOnTask.Items[index]).tagID, this.currentTask.TaskID);
+                    }
                 }
             }
         }
@@ -404,7 +382,7 @@ namespace TaskManager.UI
                 string commentText = this.txtComment.Text.Trim();
                 if (this.currentTask != null && commentText.Length > 0)
                 {
-                    this.data.Comment.Add(this.currentUser.UserID, this.currentTask.TaskID, commentText);
+                    this.data.AddComment(this.currentUser.UserID, this.currentTask.TaskID, commentText);
                     this.txtComment.Text = "";
                     this.ShowComments();
                 }
@@ -415,9 +393,11 @@ namespace TaskManager.UI
         {
             if (this.data != null && eventArguments.Row.Cells["TaskID"].Value != null)
             {
-                this.data.Task.Delete((int)eventArguments.Row.Cells["TaskID"].Value);
+                this.data.DeleteTask((int)eventArguments.Row.Cells["TaskID"].Value);
                 this.currentTask = null;
+                this.LoadTasks();
                 this.ShowTask(0);
+                eventArguments.Cancel = true;
             }
         }
 
@@ -440,14 +420,8 @@ namespace TaskManager.UI
                     if (this.login.ShowDialog() == DialogResult.OK)
                     {
                         this.data = this.login.DataConnection;
-                        this.currentUser = data.User.Get(login.UserID);
-                        this.createTask.CurrentUser = currentUser;
-                        this.updateUser.User = currentUser;
-                        this.LoadTags(true);
-                        this.LoadTasks();
-                        this.LoadTasks(); //second call to LoadTasks is to fix a bug wherein the DataGridView locks up
-                        this.LoadUsers();
-                        this.SetIsLoggedIn(true);
+                        this.FirstSetup(login.UserID);
+                        this.SaveUserCredentials();
                     }
                     else
                     {
@@ -456,14 +430,24 @@ namespace TaskManager.UI
                 }
                 catch (Exception exp)
                 {
-                    ILanguage lang = Information.Languages[Settings.Default.CurrentLanguage];
                     MessageBox.Show(
                         Utility.PrepareErrorMessage(exp),
-                        lang.Application_FataErrorTitle,
+                        "FATAL ERROR!",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void FirstSetup(int userID)
+        {
+            this.currentUser = data.GetUser(userID);
+            this.createTask.CurrentUser = currentUser;
+            this.updateUser.User = currentUser;
+            this.LoadTags(true);
+            this.LoadTasks();
+            this.LoadUsers();
+            this.SetIsLoggedIn(true);
         }
 
         private void SetIsLoggedIn(bool value)
@@ -516,11 +500,6 @@ namespace TaskManager.UI
             MessageBox.Show("unimplemented");
         }
 
-        private void MainForm_Shown(object sender, EventArgs e)
-        {
-            SetLanguageParams();
-        }
-
         private void numPriority_ValueChanged(object sender, EventArgs e)
         {
             this.SaveCurrentTask();
@@ -533,14 +512,15 @@ namespace TaskManager.UI
             this.LoadTasks();
         }
 
-        private void attachFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnAttach_Click(object sender, EventArgs e)
         {
             if (this.currentTask != null
                 && this.openFileDialog1.ShowDialog() == DialogResult.OK
                 && File.Exists(this.openFileDialog1.FileName))
             {
                 byte[] buffer = File.ReadAllBytes(this.openFileDialog1.FileName);
-                data.Attachment.Create(currentTask.TaskID, Path.GetFileName(this.openFileDialog1.FileName), buffer);
+                data.CreateAttachment(currentTask.TaskID, Path.GetFileName(this.openFileDialog1.FileName), buffer);
+                this.ShowAttachments();
             }
         }
 
@@ -549,11 +529,11 @@ namespace TaskManager.UI
             if (this.listFileAttachments.SelectedItem != null
                 && this.data != null)
             {
-                IAttachmentReference refAttach = this.listFileAttachments.SelectedItem as IAttachmentReference;
+                AttachmentReference refAttach = this.listFileAttachments.SelectedItem as AttachmentReference;
                 this.saveFileDialog1.FileName = refAttach.FileName;
                 if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    IAttachment attach = this.data.Attachment.Get(refAttach.AttachmentID);
+                    Attachment attach = this.data.GetAttachment(refAttach.AttachmentID);
                     File.WriteAllBytes(this.saveFileDialog1.FileName, attach.FileData);
                 }
             }
@@ -563,14 +543,78 @@ namespace TaskManager.UI
         {
             if (this.listFileAttachments.SelectedItem != null
                 && this.data != null
-                && MessageBox.Show("Are you sure you want to delete the file?", 
-                    "File delete", 
-                    MessageBoxButtons.YesNo, 
-                    MessageBoxIcon.Question, 
+                && MessageBox.Show("Are you sure you want to delete the file?",
+                    "File delete",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
                     MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
-                IAttachmentReference refAttach = this.listFileAttachments.SelectedItem as IAttachmentReference;
-                this.data.Attachment.Delete(refAttach.AttachmentID);
+                AttachmentReference refAttach = this.listFileAttachments.SelectedItem as AttachmentReference;
+                this.data.DeleteAttachment(refAttach.AttachmentID);
+                this.ShowAttachments();
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new AboutBox().ShowDialog();
+        }
+
+        private void minimizeToTaskTrayToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            minimizeToTaskTrayToolStripMenuItem.Checked = !minimizeToTaskTrayToolStripMenuItem.Checked;
+            notifyIcon1.ContextMenu.MenuItems[0].Checked = minimizeToTaskTrayToolStripMenuItem.Checked;
+            Settings.Default.MinimizeToTray = minimizeToTaskTrayToolStripMenuItem.Checked;
+            Settings.Default.Save();
+        }
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized && this.minimizeToTaskTrayToolStripMenuItem.Checked)
+                this.Hide();
+            else
+                this.Show();
+        }
+
+        private void notifyIcon1_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.Focus();
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.options.ShowDialog() == DialogResult.OK)
+                if (this.currentUser != null)
+                    this.SaveUserCredentials();
+        }
+
+        private void SaveUserCredentials()
+        {
+            if (Settings.Default.SaveUserName)
+                Settings.Default.UserName = currentUser.UserName;
+            if (Settings.Default.SavePassword)
+                Settings.Default.Password = currentUser.Password;
+            Settings.Default.Save();
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            if (Settings.Default.AutoLogin && Settings.Default.SaveUserName && Settings.Default.SavePassword)
+            {
+                this.Cursor = Cursors.WaitCursor;
+                if (Settings.Default.UseRemoteConnection)
+                    this.data = new TaskManager.DataAccess.MSSQL.SqlServerAccess(Settings.Default.DBConnectionString);
+                else
+                    this.data = new TaskManager.DataAccess.MSSQL.SqlServerCeAccess("tasks.sdf");
+                this.login.DataConnection = this.data;
+                int userID = data.CheckUser(Settings.Default.UserName, Settings.Default.Password);
+                if (userID > 0)
+                    this.FirstSetup(userID);
+                else
+                    this.SetIsLoggedIn(false);
+                this.Cursor = Cursors.Default;
             }
         }
     }

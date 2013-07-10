@@ -7,23 +7,22 @@ using System.Text;
 using System.Windows.Forms;
 
 using TaskManager.DataAccess;
-using TaskManager.Localization;
 using TaskManager.Properties;
 
 namespace TaskManager.UI
 {
     public partial class UpdateUserDialog : Form
     {
-        InfoAdapter data;
-        IUser currentUser;
-        public InfoAdapter DataConnection
+        IDataAccess data;
+        User currentUser;
+        public IDataAccess DataConnection
         {
             set
             {
                 data = value;
             }
         }
-        public IUser User
+        public User User
         {
             set
             {
@@ -37,18 +36,6 @@ namespace TaskManager.UI
             InitializeComponent();
         }
 
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
-            ILanguage lang = Information.Languages[Settings.Default.CurrentLanguage];
-            this.btnOK.Text = lang.OK;
-            this.btnCancel.Text = lang.Cancel;
-            this.lblInstructions.Text = lang.UpdateUser_Instructions;
-            this.lblEmailLbl.Text = lang.UpdateUser_EmailLabel;
-            this.lblPasswordLbl.Text = lang.UpdateUser_PasswordLabel;
-            this.lblPasswordConfirmLbl.Text = lang.UpdateUser_PasswordConfirmLabel;
-            this.Text = lang.UpdateUser_Title;
-        }
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
@@ -63,18 +50,17 @@ namespace TaskManager.UI
                 {
                     string password = txtPassword.Text;
                     string email = txtEmail.Text;
-                    data.User.Edit(currentUser.UserID, password, email);
+                    data.EditUser(currentUser.UserID, password, email);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
-                    ILanguage lang = Information.Languages[Settings.Default.CurrentLanguage];
                     MessageBox.Show(
-                        lang.UpdateUser_ErrorPassword,
-                        lang.Warning,
+                        "Passwords do not match",
+                        "Warning",
                         MessageBoxButtons.OK,
-                        MessageBoxIcon.Exclamation);
+                        MessageBoxIcon.Hand);
                 }
             }
         }

@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0E4B5532-D668-47E3-8D0C-6D560634284A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TaskManager</RootNamespace>
-    <AssemblyName>TaskManager</AssemblyName>
+    <AssemblyName>TaskPad</AssemblyName>
     <ApplicationIcon>Icon1.ico</ApplicationIcon>
     <StartupObject>TaskManager.Program</StartupObject>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -17,7 +17,17 @@
     <ManifestKeyFile>Task Manager UI_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
     <SignManifests>true</SignManifests>
-    <PublishUrl>C:\Users\Sean\Desktop\TaskManager\</PublishUrl>
+    <TargetZone>LocalIntranet</TargetZone>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <ExcludedPermissions>
+    </ExcludedPermissions>
+    <SignAssembly>false</SignAssembly>
+    <PublishUrl>C:\Users\Sean\Desktop\TaskPad\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -27,17 +37,16 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <CreateWebPageOnPublish>false</CreateWebPageOnPublish>
-    <AutorunEnabled>true</AutorunEnabled>
+    <TargetCulture>en-US</TargetCulture>
+    <ProductName>TaskPad</ProductName>
+    <PublisherName>McBeth Software Systems</PublisherName>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>11</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion>
-    <ApplicationRevision>1</ApplicationRevision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,28 +66,35 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Deployment" />
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox.cs">
+    <Compile Include="DataAccess\IDataAccess.cs" />
+    <Compile Include="DataAccess\MSSQL\MSSQLCommandProcessor.cs" />
+    <Compile Include="DataAccess\MSSQL\SqlServerCeAccess.cs" />
+    <Compile Include="UI\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutBox.Designer.cs">
+    <Compile Include="UI\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseLocalDataSet.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DatabaseLocalDataSet.xsd</DependentUpon>
-    </Compile>
+    <Compile Include="BusinessLogic\Utility.cs" />
+    <Compile Include="DataAccess\Attachment.cs" />
+    <Compile Include="DataAccess\AttachmentReference.cs" />
+    <Compile Include="DataAccess\Comment.cs" />
+    <Compile Include="DataAccess\DataAdapter.cs" />
+    <Compile Include="DataAccess\MSSQL\SqlServerAccess.cs" />
+    <Compile Include="DataAccess\Tag.cs" />
+    <Compile Include="DataAccess\Task.cs" />
+    <Compile Include="DataAccess\User.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="UI\AddTask.cs">
       <SubType>Form</SubType>
@@ -91,6 +107,12 @@
     </Compile>
     <Compile Include="UI\CommentControl.Designer.cs">
       <DependentUpon>CommentControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\CommentListingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\CommentListingControl.Designer.cs">
+      <DependentUpon>CommentListingControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Login.cs">
       <SubType>Form</SubType>
@@ -106,7 +128,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AboutBox.resx">
+    <EmbeddedResource Include="UI\AboutBox.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -123,6 +145,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>CommentControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\CommentListingControl.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CommentListingControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Login.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Login.cs</DependentUpon>
@@ -130,6 +156,10 @@
     <EmbeddedResource Include="UI\MainForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Options.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>Options.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\TagManager.resx">
       <SubType>Designer</SubType>
@@ -144,27 +174,25 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="App.config" />
-    <None Include="DatabaseLocalDataSet.xsc">
-      <DependentUpon>DatabaseLocalDataSet.xsd</DependentUpon>
-    </None>
-    <None Include="DatabaseLocalDataSet.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DatabaseLocalDataSet.Designer.cs</LastGenOutput>
+    <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="DatabaseLocalDataSet.xss">
-      <DependentUpon>DatabaseLocalDataSet.xsd</DependentUpon>
-    </None>
+    <BaseApplicationManifest Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Task Manager UI_TemporaryKey.pfx" />
+    <None Include="updateDB.sql" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="UI\Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\TagManager.cs">
       <SubType>Form</SubType>
@@ -180,34 +208,37 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DatabaseLocal.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DatabaseLocal_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>DatabaseLocal.mdf</DependentUpon>
-    </Content>
     <Content Include="Icon1.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Task Manager Languages\Task Manager Languages.csproj">
-      <Project>{273A6648-93A8-4169-9C92-10B19B7147DD}</Project>
-      <Name>Task Manager Languages</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TaskMan Logic\Task Manager Logic.csproj">
-      <Project>{6337894D-B589-4D69-B6E5-DCC72C439F7F}</Project>
-      <Name>Task Manager Logic</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
       <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0</ProductName>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Sql.Server.Express.1.0">
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
       <Visible>False</Visible>
-      <ProductName>SQL Server 2005 Express Edition</ProductName>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.SQL.Server.Compact.3.5">
+      <Visible>False</Visible>
+      <ProductName>SQL Server Compact 3.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
@@ -215,6 +246,18 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="System.Data.SqlServerCe">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

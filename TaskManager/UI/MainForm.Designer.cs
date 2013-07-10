@@ -28,6 +28,7 @@ namespace TaskManager.UI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.lstTags = new System.Windows.Forms.CheckedListBox();
             this.lstTagsOnTask = new System.Windows.Forms.CheckedListBox();
@@ -46,7 +47,6 @@ namespace TaskManager.UI
             this.lblSearchTagsLbl = new System.Windows.Forms.Label();
             this.lblFilterUserLbl = new System.Windows.Forms.Label();
             this.comboFilterAssignUser = new System.Windows.Forms.ComboBox();
-            this.lblSearchCount = new System.Windows.Forms.Label();
             this.splitBottomLeftRight = new System.Windows.Forms.SplitContainer();
             this.tabTaskInfo = new System.Windows.Forms.TabControl();
             this.tabTaskDetails = new System.Windows.Forms.TabPage();
@@ -66,6 +66,7 @@ namespace TaskManager.UI
             this.tableFileAttachments = new System.Windows.Forms.TableLayoutPanel();
             this.listFileAttachments = new System.Windows.Forms.ListBox();
             this.flowAttachmentControls = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnAttach = new System.Windows.Forms.Button();
             this.btnSaveAttachment = new System.Windows.Forms.Button();
             this.btnDeleteAttachment = new System.Windows.Forms.Button();
             this.tableComments = new System.Windows.Forms.TableLayoutPanel();
@@ -83,22 +84,24 @@ namespace TaskManager.UI
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editUserDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.minimizeToTaskTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addTaskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.attachFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editUserDetailsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitStatusFromMain = new System.Windows.Forms.SplitContainer();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lblSearchCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.gvTasks)).BeginInit();
             this.panTop.SuspendLayout();
             this.splitLeftRight.Panel1.SuspendLayout();
@@ -129,6 +132,7 @@ namespace TaskManager.UI
             this.splitStatusFromMain.Panel1.SuspendLayout();
             this.splitStatusFromMain.Panel2.SuspendLayout();
             this.splitStatusFromMain.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // lstTags
@@ -273,7 +277,6 @@ namespace TaskManager.UI
             // 
             // splitTopLeftRight.Panel2
             // 
-            this.splitTopLeftRight.Panel2.Controls.Add(this.lblSearchCount);
             this.splitTopLeftRight.Panel2.Controls.Add(this.gvTasks);
             this.splitTopLeftRight.Size = new System.Drawing.Size(680, 236);
             this.splitTopLeftRight.SplitterDistance = 173;
@@ -327,17 +330,6 @@ namespace TaskManager.UI
             this.comboFilterAssignUser.Size = new System.Drawing.Size(165, 21);
             this.comboFilterAssignUser.TabIndex = 3;
             this.comboFilterAssignUser.SelectedIndexChanged += new System.EventHandler(this.comboFilterAssignUser_SelectedIndexChanged);
-            // 
-            // lblSearchCount
-            // 
-            this.lblSearchCount.AutoSize = true;
-            this.lblSearchCount.BackColor = System.Drawing.Color.Transparent;
-            this.lblSearchCount.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSearchCount.Location = new System.Drawing.Point(0, 0);
-            this.lblSearchCount.Name = "lblSearchCount";
-            this.lblSearchCount.Size = new System.Drawing.Size(13, 13);
-            this.lblSearchCount.TabIndex = 2;
-            this.lblSearchCount.Text = "0";
             // 
             // splitBottomLeftRight
             // 
@@ -561,6 +553,7 @@ namespace TaskManager.UI
             // 
             // flowAttachmentControls
             // 
+            this.flowAttachmentControls.Controls.Add(this.btnAttach);
             this.flowAttachmentControls.Controls.Add(this.btnSaveAttachment);
             this.flowAttachmentControls.Controls.Add(this.btnDeleteAttachment);
             this.flowAttachmentControls.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -569,9 +562,19 @@ namespace TaskManager.UI
             this.flowAttachmentControls.Size = new System.Drawing.Size(83, 213);
             this.flowAttachmentControls.TabIndex = 1;
             // 
+            // btnAttach
+            // 
+            this.btnAttach.Location = new System.Drawing.Point(3, 3);
+            this.btnAttach.Name = "btnAttach";
+            this.btnAttach.Size = new System.Drawing.Size(75, 23);
+            this.btnAttach.TabIndex = 2;
+            this.btnAttach.Text = "Attach";
+            this.btnAttach.UseVisualStyleBackColor = true;
+            this.btnAttach.Click += new System.EventHandler(this.btnAttach_Click);
+            // 
             // btnSaveAttachment
             // 
-            this.btnSaveAttachment.Location = new System.Drawing.Point(3, 3);
+            this.btnSaveAttachment.Location = new System.Drawing.Point(3, 32);
             this.btnSaveAttachment.Name = "btnSaveAttachment";
             this.btnSaveAttachment.Size = new System.Drawing.Size(75, 23);
             this.btnSaveAttachment.TabIndex = 0;
@@ -581,7 +584,7 @@ namespace TaskManager.UI
             // 
             // btnDeleteAttachment
             // 
-            this.btnDeleteAttachment.Location = new System.Drawing.Point(3, 32);
+            this.btnDeleteAttachment.Location = new System.Drawing.Point(3, 61);
             this.btnDeleteAttachment.Name = "btnDeleteAttachment";
             this.btnDeleteAttachment.Size = new System.Drawing.Size(75, 23);
             this.btnDeleteAttachment.TabIndex = 1;
@@ -704,8 +707,9 @@ namespace TaskManager.UI
             this.toolStripSeparator2,
             this.importToolStripMenuItem,
             this.exportToolStripMenuItem,
-            this.editUserDetailsToolStripMenuItem,
             this.toolStripSeparator1,
+            this.minimizeToTaskTrayToolStripMenuItem,
+            this.toolStripSeparator4,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -714,53 +718,58 @@ namespace TaskManager.UI
             // loginToolStripMenuItem
             // 
             this.loginToolStripMenuItem.Name = "loginToolStripMenuItem";
-            this.loginToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.loginToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.loginToolStripMenuItem.Text = "&Login...";
             this.loginToolStripMenuItem.Click += new System.EventHandler(this.loginToolStripMenuItem_Click);
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.logoutToolStripMenuItem.Text = "L&ogout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(155, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(187, 6);
             // 
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.importToolStripMenuItem.Text = "&Import...";
             this.importToolStripMenuItem.Visible = false;
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.exportToolStripMenuItem.Text = "&Export...";
             this.exportToolStripMenuItem.Visible = false;
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
-            // editUserDetailsToolStripMenuItem
-            // 
-            this.editUserDetailsToolStripMenuItem.Name = "editUserDetailsToolStripMenuItem";
-            this.editUserDetailsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.editUserDetailsToolStripMenuItem.Text = "Edit &User Details";
-            this.editUserDetailsToolStripMenuItem.Click += new System.EventHandler(this.editUserDetailsToolStripMenuItem_Click);
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(155, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(187, 6);
+            // 
+            // minimizeToTaskTrayToolStripMenuItem
+            // 
+            this.minimizeToTaskTrayToolStripMenuItem.Name = "minimizeToTaskTrayToolStripMenuItem";
+            this.minimizeToTaskTrayToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+            this.minimizeToTaskTrayToolStripMenuItem.Text = "&Minimize to Task Tray";
+            this.minimizeToTaskTrayToolStripMenuItem.Click += new System.EventHandler(this.minimizeToTaskTrayToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(187, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -770,7 +779,8 @@ namespace TaskManager.UI
             this.addTaskToolStripMenuItem,
             this.manageTagsToolStripMenuItem,
             this.toolStripSeparator3,
-            this.attachFileToolStripMenuItem});
+            this.editUserDetailsToolStripMenuItem,
+            this.optionsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "&Edit";
@@ -778,56 +788,50 @@ namespace TaskManager.UI
             // addTaskToolStripMenuItem
             // 
             this.addTaskToolStripMenuItem.Name = "addTaskToolStripMenuItem";
-            this.addTaskToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.addTaskToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.addTaskToolStripMenuItem.Text = "&Add Task";
             this.addTaskToolStripMenuItem.Click += new System.EventHandler(this.addTaskToolStripMenuItem_Click);
             // 
             // manageTagsToolStripMenuItem
             // 
             this.manageTagsToolStripMenuItem.Name = "manageTagsToolStripMenuItem";
-            this.manageTagsToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.manageTagsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.manageTagsToolStripMenuItem.Text = "&Manage Tags";
             this.manageTagsToolStripMenuItem.Click += new System.EventHandler(this.manageTagsToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(142, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(155, 6);
             // 
-            // attachFileToolStripMenuItem
+            // editUserDetailsToolStripMenuItem
             // 
-            this.attachFileToolStripMenuItem.Enabled = false;
-            this.attachFileToolStripMenuItem.Name = "attachFileToolStripMenuItem";
-            this.attachFileToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
-            this.attachFileToolStripMenuItem.Text = "Attach &File...";
-            this.attachFileToolStripMenuItem.Click += new System.EventHandler(this.attachFileToolStripMenuItem_Click);
+            this.editUserDetailsToolStripMenuItem.Name = "editUserDetailsToolStripMenuItem";
+            this.editUserDetailsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.editUserDetailsToolStripMenuItem.Text = "Edit &User Details";
+            this.editUserDetailsToolStripMenuItem.Click += new System.EventHandler(this.editUserDetailsToolStripMenuItem_Click);
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.optionsToolStripMenuItem.Text = "&Options...";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.languageToolStripMenuItem,
-            this.toolStripSeparator4,
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // languageToolStripMenuItem
-            // 
-            this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
-            this.languageToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.languageToolStripMenuItem.Text = "&Language";
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(123, 6);
+            this.helpToolStripMenuItem.Text = "&Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // splitStatusFromMain
             // 
@@ -849,15 +853,29 @@ namespace TaskManager.UI
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblSearchCount});
             this.statusStrip1.Location = new System.Drawing.Point(0, 9);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.statusStrip1.Size = new System.Drawing.Size(970, 22);
             this.statusStrip1.TabIndex = 0;
             // 
+            // lblSearchCount
+            // 
+            this.lblSearchCount.Name = "lblSearchCount";
+            this.lblSearchCount.Size = new System.Drawing.Size(0, 17);
+            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "TaskPad v1.0";
+            this.notifyIcon1.Visible = true;
+            this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
             // 
             // MainForm
             // 
@@ -868,7 +886,9 @@ namespace TaskManager.UI
             this.Controls.Add(this.menuMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
-            this.Text = "Issue Tracker";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "TaskPad v1.0";
+            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.gvTasks)).EndInit();
             this.panTop.ResumeLayout(false);
@@ -880,7 +900,6 @@ namespace TaskManager.UI
             this.splitTopBottom.ResumeLayout(false);
             this.splitTopLeftRight.Panel1.ResumeLayout(false);
             this.splitTopLeftRight.Panel2.ResumeLayout(false);
-            this.splitTopLeftRight.Panel2.PerformLayout();
             this.splitTopLeftRight.ResumeLayout(false);
             this.tableFilterControls.ResumeLayout(false);
             this.tableFilterControls.PerformLayout();
@@ -906,6 +925,8 @@ namespace TaskManager.UI
             this.splitStatusFromMain.Panel2.ResumeLayout(false);
             this.splitStatusFromMain.Panel2.PerformLayout();
             this.splitStatusFromMain.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -943,13 +964,11 @@ namespace TaskManager.UI
         private System.Windows.Forms.ToolStripMenuItem loginToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem languageToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitStatusFromMain;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
-        private System.Windows.Forms.Label lblSearchCount;
         private System.Windows.Forms.DataGridViewTextBoxColumn TaskID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Priority;
         private System.Windows.Forms.DataGridViewTextBoxColumn Progress;
@@ -958,7 +977,6 @@ namespace TaskManager.UI
         private System.Windows.Forms.DataGridViewTextBoxColumn DueDate;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem attachFileToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.TabControl tabTaskInfo;
@@ -981,8 +999,13 @@ namespace TaskManager.UI
         private System.Windows.Forms.FlowLayoutPanel flowAttachmentControls;
         private System.Windows.Forms.Button btnSaveAttachment;
         private System.Windows.Forms.Button btnDeleteAttachment;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem minimizeToTaskTrayToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.Button btnAttach;
+        private System.Windows.Forms.ToolStripStatusLabel lblSearchCount;
     }
 }
 

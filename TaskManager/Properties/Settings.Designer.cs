@@ -12,7 +12,7 @@ namespace TaskManager.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "12.0.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -20,29 +20,6 @@ namespace TaskManager.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=Sean-PC\\SQLEXPRESS;Initial Catalog=TaskDB;Persist Security Info=True;" +
-            "User ID=TaskUserLogin;Password=TaskUser_Pass")]
-        public string DBConnectionString {
-            get {
-                return ((string)(this["DBConnectionString"]));
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("en-US")]
-        public string CurrentLanguage {
-            get {
-                return ((string)(this["CurrentLanguage"]));
-            }
-            set {
-                this["CurrentLanguage"] = value;
             }
         }
         
@@ -70,14 +47,88 @@ namespace TaskManager.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;AttachDbFilename=|DataDirectory|\\DatabaseLocal.mdf;Integ" +
-            "rated Security=True;User Instance=True")]
-        public string DatabaseLocalConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MinimizeToTray {
             get {
-                return ((string)(this["DatabaseLocalConnectionString"]));
+                return ((bool)(this["MinimizeToTray"]));
+            }
+            set {
+                this["MinimizeToTray"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoLogin {
+            get {
+                return ((bool)(this["AutoLogin"]));
+            }
+            set {
+                this["AutoLogin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SavePassword {
+            get {
+                return ((bool)(this["SavePassword"]));
+            }
+            set {
+                this["SavePassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=Sean-PC\\SQLEXPRESS;Initial Catalog=TaskDB;Persist Security Info=True;" +
+            "User ID=TaskUserLogin;Password=TaskUser_Pass")]
+        public string DBConnectionString {
+            get {
+                return ((string)(this["DBConnectionString"]));
+            }
+            set {
+                this["DBConnectionString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Password {
+            get {
+                return ((string)(this["Password"]));
+            }
+            set {
+                this["Password"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseRemoteConnection {
+            get {
+                return ((bool)(this["UseRemoteConnection"]));
+            }
+            set {
+                this["UseRemoteConnection"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowWarning {
+            get {
+                return ((bool)(this["ShowWarning"]));
+            }
+            set {
+                this["ShowWarning"] = value;
             }
         }
     }
